@@ -1,39 +1,31 @@
 import streamlit as st
 import pandas as pd
+from sklearn.feature_extraction.text import CountVectorizer
 import pickle
 
-# Load the trained model
-with open('mbti_model.pkl', 'rb') as model_file:
-    loaded_model = pickle.load(model_file)
+mbti_model = pickle.load(open('mbti_model.pkl', 'rb'))
 
-# Function to make predictions
-def predict_personality(input_data):
-    # Preprocess input_data if needed (should match the preprocessing used during training)
-    # For simplicity, assume input_data is a DataFrame with the same structure as the training data
-    predictions = loaded_model.predict(input_data)
-    return predictions
+vectorizer_model = pickle.load(open('vectorizer.pkl', 'rb'))
 
 # Streamlit app
 def main():
     st.title('MBTI Personality Prediction App')
 
-    # Input features for prediction
-    st.sidebar.header('User Input Features')
-    
-    # Example: Assuming four features for simplicity, adjust as per your dataset
-    feature1 = st.sidebar.slider('Feature 1', min_value=0, max_value=10, value=5)
-    feature2 = st.sidebar.slider('Feature 2', min_value=0, max_value=10, value=5)
-    feature3 = st.sidebar.slider('Feature 3', min_value=0, max_value=10, value=5)
-    feature4 = st.sidebar.slider('Feature 4', min_value=0, max_value=10, value=5)
+    # Input text for prediction
+    user_input = st.text_area('Enter your posts here:')
 
-    # Create a DataFrame from user input
-    user_input = pd.DataFrame({'Feature1': [feature1], 'Feature2': [feature2],
-                               'Feature3': [feature3], 'Feature4': [feature4]})
-
-    # Make predictions
+    # Make prediction when the user clicks the button
     if st.button('Predict'):
-        predictions = predict_personality(user_input)
-        st.success(f'Predicted Personality Type: {predictions[0]}')
+        if user_input:
+            # Convert the user input to numerical format using the loaded vectorizer
+            user_input_vec = vectorizer.transform([user_input])
+
+            # Make predictions
+            prediction = loaded_model.predict(user_input_vec)
+
+            st.success(f'Predicted Personality Type: {prediction[0]}')
+        else:
+            st.warning('Please enter your posts for prediction.')
 
 if _name_ == '_main_':
     main()
