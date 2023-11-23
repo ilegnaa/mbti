@@ -3,9 +3,9 @@ import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 import pickle
 
-mbti_model = pickle.load(open('mbti_model.pkl', 'rb'))
+pickle.load(open('mbti_model.pkl', 'rb'))
 
-vectorizer_model = pickle.load(open('vectorizer.pkl', 'rb'))
+pickle.load(open('vectorizer.pkl', 'rb'))
 
 # Streamlit app
 def main():
